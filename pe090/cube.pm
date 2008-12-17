@@ -8,53 +8,31 @@ use Cubes;
 my %seen;
 my $count = 0;
 
-for my $i (102_345 .. 546_789) {
-    print "i=$i" if $i % 1_000 == 0;
-    my $d1 = mk_die($i);
-
-    next if scalar(keys %$d1) != 6;
-
-    my $c = ($d1);
-
+for my $i (102_345 .. 456_789) {
+    print "i=$i" if $i % 5_000 == 0;
+    my $d1 = merge($i);
+    my $s1 = as_string($d1);
+    next unless sides($d1) == 6;
+    my $c = complement_of($d1);
     my ($r1, $r2) = mk_range($c);
-
     for my $j ($r1 .. $r2) {
 
-        my $d2 = { %$c, map { $_ => 1 } split //, $j };
-        #next if scalar(keys %$d2) != 6;
-
-        #next if $seen{ $d1 }{ $d2 };
-        #next if $seen{ $d2 }{ $d1 };
-        #$seen{ $d1 }{ $d2 } = $seen{ $d2 }{ $d1 } = 1;
-
-        next unless shows_all($d1,$d2);
-
-        my $s1 = as_string($d1);
+        my $d2 = merge($c,$j);
+        next unless sides($d2) == 6;
         my $s2 = as_string($d2);
-        my $sc = as_string($c);
 
-        for my $x (complete($d1)) {
+        next if $seen{ $s1 }{ $s2 };
+        next if $seen{ $s2 }{ $s1 };
+        $seen{ $s1 }{ $s2 } = $seen{ $s2 }{ $s1 } = 1;
 
-            my $sx = join q(), sort keys %$x;
-
-            for my $y (complete($d2)) {
-
-                my $sy = join q(), sort keys %$y;
-
-                next if $seen{ $sx }{ $sy };
-                next if $seen{ $sy }{ $sx };
-                $seen{ $sx }{ $sy } = $seen{ $sy }{ $sx } = 1;
-
-                print "found i=$i j=$j sx=$sx sy=$sy sc=$sc r1=$r1 r2=$r2 count=$count";
-
-                $count++;
-
-            }
+        if (shows_all($d1,$d2)) {
+            $count++;
+            print "    $s1 $s2 count=$count";
         }
     }
 }
 
-print $count;
+print "final count=$count";
 
 __END__
 
