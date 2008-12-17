@@ -4,65 +4,10 @@ use strict;
 use warnings FATAL => 'all';
 use Data::Dumper;
 
-my %seen;
-my $count = 0;
-
-for my $i (102_345 .. 546_789) {
-    print "i=$i" if $i % 1_000 == 0;
-    my $d1 = mk_die($i);
-
-    next if scalar(keys %$d1) != 6;
-
-    my $c = ($d1);
-
-    my ($r1, $r2) = mk_range($c);
-
-    for my $j ($r1 .. $r2) {
-
-        my $d2 = { %$c, map { $_ => 1 } split //, $j };
-        #next if scalar(keys %$d2) != 6;
-
-        #next if $seen{ $d1 }{ $d2 };
-        #next if $seen{ $d2 }{ $d1 };
-        #$seen{ $d1 }{ $d2 } = $seen{ $d2 }{ $d1 } = 1;
-
-        next unless shows_all($d1,$d2);
-
-        my $s1 = as_string($d1);
-        my $s2 = as_string($d2);
-        my $sc = as_string($c);
-
-        for my $x (complete($d1)) {
-
-            my $sx = join q(), sort keys %$x;
-
-            for my $y (complete($d2)) {
-
-                my $sy = join q(), sort keys %$y;
-
-                next if $seen{ $sx }{ $sy };
-                next if $seen{ $sy }{ $sx };
-                $seen{ $sx }{ $sy } = $seen{ $sy }{ $sx } = 1;
-
-                print "found i=$i j=$j sx=$sx sy=$sy sc=$sc r1=$r1 r2=$r2 count=$count";
-
-                $count++;
-
-            }
-        }
-    }
-}
-
-#print scalar keys %good;
-print $count;
-
 sub mk_die {
-    my %d;
-    for my $x (@_) {
-        if (ref($x) eq 'HASH') { %d = (%d, %$x); }
-        else { $d{$_} = 1 for split //, $x; }
-    }
-    return \%d;
+    my @d;
+    $d[$_] = 1 for split //, $_[0];
+    return \@d;
 }
 
 sub mk_range {
@@ -71,10 +16,10 @@ sub mk_range {
 }
 
 sub start_die {
-    my $d = $_[0] || {};
-    my $c = {};
+    my $d = $_[0] || [];
+    my $c = [];
     for (grep { !$d->{$_} } 0, 1, 2, 3, 4, 5, 8) {
-        $c->{$_} = 1;
+        $c->[$_] = 1;
     }
     return $c;
 }
@@ -93,77 +38,78 @@ sub complete {
 
 sub as_string {
     my $d = shift;
-    return join q(), sort keys %$d;
+    return join q(), grep { $d->[$_] } 0 .. 9;
 }
 
 sub shows_all {
     my ($d1,$d2) = @_;
 
-    return 0 unless $d1->{6} || $d1->{9} || $d2->{6} || $d2->{9};
+    return 0 unless $d1->[6] || $d1->[9] || $d2->[6] || $d2->[9];
 
-    # 01
-    {
-        last if $d1->{0} && $d2->{1};
-        last if $d1->{1} && $d2->{0};
-        return 0;
-    }
+    # can we represent "01"?
+    return 0 unless
+        ($d1->[0] && $d2->[1])
+        ||
+        ($d1->[1] && $d2->[0]);
 
-    # 04
-    {
-        last if $d1->{0} && $d2->{4};
-        last if $d1->{4} && $d2->{0};
-        return 0;
-    }
+    # can we represent "04"?
+    return 0 unless
+        ($d1->[0] && $d2->[4])
+        ||
+        ($d1->[4] && $d2->[0]);
 
-    # 09
-    {
-        last if $d1->{0} && $d2->{9};
-        last if $d1->{9} && $d2->{0};
-        last if $d1->{0} && $d2->{6};
-        last if $d1->{6} && $d2->{0};
-        return 0;
-    }
+    # can we represent "09" (or equivalently "06")?
+    return 0 unless
+        ($d1->[0] && $d2->[9])
+        ||
+        ($d1->[0] && $d2->[6])
+        ||
+        ($d1->[9] && $d2->[0])
+        ||
+        ($d1->[6] && $d2->[0]);
 
-    # 16
-    {
-        last if $d1->{1} && $d2->{6};
-        last if $d1->{6} && $d2->{1};
-        last if $d1->{1} && $d2->{9};
-        last if $d1->{9} && $d2->{1};
-        return 0;
-    }
+    # can we represent "16" (or equivalently "19")?
+    return 0 unless
+        ($d1->[1] && $d2->[6])
+        ||
+        ($d1->[1] && $d2->[9])
+        ||
+        ($d1->[6] && $d2->[1])
+        ||
+        ($d1->[9] && $d2->[1]);
 
-    # 25
-    {
-        last if $d1->{2} && $d2->{5};
-        last if $d1->{5} && $d2->{2};
-        return 0;
-    }
+    # can we represent "25"?
+    return 0 unless
+        ($d1->[2] && $d2->[5])
+        ||
+        ($d1->[5] && $d2->[2]);
 
-    # 36
-    {
-        last if $d1->{3} && $d2->{6};
-        last if $d1->{3} && $d2->{9};
-        last if $d1->{6} && $d2->{3};
-        last if $d1->{9} && $d2->{3};
-        return 0;
-    }
+    # can we represent "36" (or equivalently "39")?
+    return 0 unless
+        ($d1->[3] && $d2->[6])
+        ||
+        ($d1->[3] && $d2->[9])
+        ||
+        ($d1->[6] && $d2->[3])
+        ||
+        ($d1->[9] && $d2->[3]);
 
-    # 49 *and* 64
-    {
-        last if $d1->{4} && $d2->{9};
-        last if $d1->{4} && $d2->{6};
-        last if $d1->{6} && $d2->{4};
-        last if $d1->{9} && $d2->{4};
-        return 0;
-    }
+    # two-for-one: if we can represent 49, then we can show 64 as well.
+    # can we represent "36" (or equivalently "39")?
+    return 0 unless
+        ($d1->[4] && $d2->[9])
+        ||
+        ($d1->[4] && $d2->[6])
+        ||
+        ($d1->[6] && $d2->[4])
+        ||
+        ($d1->[9] && $d2->[4]);
 
-    # 81
-    {
-        last if $d1->{8} && $d2->{1};
-        last if $d1->{1} && $d2->{8};
-        return 0;
-    }
+    # can we represent "81"?
+    return 0 unless
+        ($d1->[8] && $d2->[1])
+        ||
+        ($d1->[1] && $d2->[8]);
 
     return 1;
 }
