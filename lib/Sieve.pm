@@ -4,14 +4,19 @@
 package Sieve;
 
 use strict;
-use warnings;
-use Storable qw(store retrieve);
+use warnings FATAL => 'all';
 
 our $POS;
 our $MAX;
 our $VEC;
 our @PRIMES;    # list of known primes
 our %LOOKUP;    # fast prime lookup
+
+unless (caller()) {
+    Sieve->import(max => 10_000);
+    my @p = Sieve->primes;
+    print "@p[0..9]\n";
+}
 
 sub import {
     my ($class, %args) = @_;
@@ -24,7 +29,8 @@ sub import {
 }
 
 sub build_sieve {
-    local ($|,$\) = (1,q());
+    local $| = 1;
+    local $\ = q();
     print "Building sieve: ";
     while (max_prime() < $MAX) {
         print "." unless nprimes() % 2000;
@@ -52,6 +58,7 @@ sub is_prime {
 }
 
 sub sieve {
+    # walk the sieve to the next unmarked position
     while (1) {
         $POS++;
         last unless vec($VEC,$POS,1);
@@ -62,7 +69,9 @@ sub sieve {
     $LOOKUP{$prime} = 1;
 
     # flag all multiples of $prime in the sieve
-    for (my $i = 2 * $prime; $i <= $MAX; $i += $prime) {
+    # NOTE: we can start at $prime * $prime, since all smaller multiples
+    # (2*$prime, 3*$prime, etc.) have been flagged as composite already.
+    for (my $i = $prime * $prime; $i <= $MAX; $i += $prime) {
         vec($VEC,$i,1) = 1;
     }
 }
