@@ -11032,7 +11032,7 @@ sub is_prime {
     my $n = shift;
     die "$n out of range" if $n > 1_000_000;
     $lookup ||= { map { $_ => 1 } primes() };
-    return $lookup->{ $_[0] };
+    return $lookup->{ $n };
 }
 
 1;
