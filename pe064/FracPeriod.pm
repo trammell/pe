@@ -2,8 +2,7 @@
 # vim: set ai et ts=4 tw=75 :
 
 use strict;
-use warnings;
-use Math::BigFloat;
+use warnings FATAL => 'all';
 
 # make an iterator
 # generate a's until we see a pattern
@@ -12,12 +11,12 @@ use Math::BigFloat;
 my $odd = 0;
 
 for my $n (1 .. 10_000) {
-    my $p = period($n);
+    my $p = find_period($n);
     next if $p % 2 == 0;
     $odd++;
 }
 
-print $odd;
+print "count of numbers with odd period: $odd";
 
 sub period {
     my $d = shift;
