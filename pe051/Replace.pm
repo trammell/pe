@@ -3,7 +3,7 @@
 
 use strict;
 use warnings FATAL => 'all';
-use diagnostics;
+use lib "$ENV{HOME}/work/project-euler/lib";
 use Data::Dumper;
 use Math::Combinatorics;
 use Sieve;
