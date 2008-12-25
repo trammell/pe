@@ -4,10 +4,11 @@
 package ConFrac;
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use Math::BigInt;
+use Math::BigFloat;
 
-our $EPSILON = 1e-20;
+Math::BigFloat->accuracy(100);
 
 unless (caller()) {
     my @a = cf(sqrt(2.0),10);
@@ -20,8 +21,8 @@ unless (caller()) {
     my $PI = 4 * atan2(1,1);
     my $it = make_iterator($PI);
     for (1 .. 10) {
-        my ($a,$n,$d) = $it->();
-        my $f = $n / $d;
+        my ($a,$n,$d,undef) = $it->();
+        my $f = Math::BigFloat->new($n) / Math::BigFloat->new($d);
         print "$n / $d => $f";
     }
 }
@@ -29,6 +30,7 @@ unless (caller()) {
 sub cf {
     my ($x, $niter) = @_;
     my @a;
+    my $EPSILON = 1e-10;
     while ($niter--) {
         push @a, int($x);
         $x -= int($x);
@@ -65,14 +67,16 @@ sub convergents {
 }
 
 sub make_iterator {
-    my $float = shift;
+    my $float = Math::BigFloat->new("$_[0]");
     my @a;
     my @num;
     my @den;
+    my $EPSILON = 1e-10;
 
     return sub {
-        push @a, Math::BigInt->new(int($float));
-        $float -= $a[-1];
+        my $a = $float->copy->bfloor();
+        push @a, Math::BigInt->new($a);
+        $float->bsub($a);
         if ($float < $EPSILON) {
             warn "cf(): float too small, returning\n";
             return undef;
@@ -94,7 +98,7 @@ sub make_iterator {
             push @den, $a[-1] * $den[-1] + $den[-2];
         }
 
-        return $a[-1], $num[-1], $den[-1];
+        return $a[-1], $num[-1], $den[-1], $float->copy;
     };
 }
 
