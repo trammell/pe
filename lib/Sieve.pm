@@ -5,10 +5,10 @@ package Sieve;
 
 use strict;
 use warnings FATAL => 'all';
+use Time::HiRes;
 
 my $MAX;
 my @PRIMES;     # ordered list of known primes
-my %PRIMES;     # for fast lookup of primes
 
 unless (caller()) {
     Sieve->import;
@@ -23,22 +23,21 @@ sub import {
 }
 
 sub build_sieve {
-    local $| = 1;
     local $\ = q();
     my $sqrt = int(sqrt(1 + $MAX));
     my $incr = int($MAX / 50);
     my $v    = q();
 
-    print "Building sieve";
+    print STDERR "Building sieve: .";
+    my $t0 = [ Time::HiRes::gettimeofday() ];
 
     for my $i (2 .. $MAX) {
-        print "." if $i % $incr == 0;
+        print STDERR "." if $i % $incr == 0;
 
         # if vec($v,$i,1) is 0, then $i is prime.
 
         if (vec($v,$i,1) == 0) {
             push @PRIMES, $i;
-            $PRIMES{$i} = 1;
 
             # Since $i is prime, all multiples of $i in the sieve can be
             # flagged as composite.  We start at $i*$i, since all smaller
@@ -54,7 +53,11 @@ sub build_sieve {
         }
     }
 
-    print "\n";
+    print STDERR "\n";
+
+    my $np = scalar @PRIMES;
+    my $elapsed = Time::HiRes::tv_interval($t0);
+    warn "Sieved $np primes in $elapsed seconds.\n";
 }
 
 sub max_prime {
@@ -67,12 +70,6 @@ sub nprimes {
 
 sub primes {
     return @PRIMES;
-}
-
-sub is_prime {
-    my ($class, $n) = @_;
-    die "Value '$n' is out of range" if $n > $MAX;
-    return $PRIMES{$n};
 }
 
 1;
