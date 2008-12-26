@@ -26,9 +26,9 @@ sorting on n if the radical values are equal, we get:
                 1   1       1
                 2   2       2
                 4   2       3
-                8   2       4
+                8   2       4       <= E(4)
                 3   3       5
-                9   3       6
+                9   3       6       <= E(6)
                 5   5       7
                 6   6       8
                 7   7       9
@@ -38,3 +38,4 @@ Let E(k) be the kth element in the sorted n column; for example E(4) = 8
 and E(6) = 9.
 
 If rad(n) is sorted for 1 <= n <= 100_000, find E(10000).
+
