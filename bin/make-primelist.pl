@@ -16,16 +16,12 @@ package Primes;
 use strict;
 use warnings FATAL => 'all';
 
-my \@PRIMES = (
+our \@PRIMES = (
 @{[ Text::Wrap::wrap($sep,$sep,join q(, ), Sieve->primes()) ]}
 );
 
 unless (caller()) {
-    print join(q(, ), \@PRIMES[0 .. 9]), "... \$PRIMES[-1]\n";
-}
-
-sub primes {
-    return \@PRIMES;
+    print join(q(, ), \@PRIMES[0 .. 9]), "... \$PRIMES[-1]\\n";
 }
 
 1;
