@@ -19,24 +19,16 @@ print "count of numbers with odd period: $odd";
 
 sub find_period {
     my $n = shift;
+    my $s = sqrt($n);
 
-    my $s = Math::BigFloat->new("$n")->bsqrt();
-    my $it = ConFrac::make_iterator($s);
+    while (1) {
 
-    my @seq;
-    my %seen;
-
-    for (my $i=0;;$i++) {
-        my ($a,$num,$den,$next) = $it->();
-        my $key = join q( ), $a->bstr, $next->copy->bround(20)->bstr;
-        push @seq, $key;
-        last if $seen{ $key };
-        $seen{ $key } = 1;
     }
+}
 
-    # now find the period
-
-    my @r = reverse @seq;
+sub expand {
+    my $n = shift;
+    ...
 
 }
 
