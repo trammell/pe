@@ -1,26 +1,26 @@
 #!/usr/bin/perl -l
-# vim: set ai et ts=4 tw=75 :
 
 use strict;
 use warnings FATAL => 'all';
 
-# make an iterator
-# generate a's until we see a pattern
-# get the period
-
+my %is_square = map { $_ * $_ => 1 } 1 .. 100;
 my $odd = 0;
 
 for my $n (1 .. 10_000) {
-    my $p = find_period($n);
-    next if $p % 2 == 0;
-    $odd++;
+    print "n=$n" if $n % 100 == 0;
+    if ($is_square{$n}) {
+        print "skipping square: $n";
+    }
+    #my $per = find_period($n);
+    #$odd++ if $per % 2 == 1;
 }
 
 print "count of numbers with odd period: $odd";
 
-sub period {
-    my $d = shift;
-    my $s = Math::BigFloat->new("$d")->bsqrt();
+sub find_period {
+    my $n = shift;
+
+    my $s = Math::BigFloat->new("$n")->bsqrt();
     my $it = ConFrac::make_iterator($s);
 
     my @seq;
