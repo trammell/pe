@@ -63,3 +63,11 @@ Exactly four continued fractions, for N <= 13, have an odd period.
 
 How many continued fractions for N <= 10000 have an odd period?
 
+Resources:
+
+    http://www.research.att.com/~njas/sequences/A003285
+    http://home.att.net/~numericana/answer/fractions.htm
+    http://en.wikipedia.org/wiki/Generalized_continued_fraction
+    http://plus.maths.org/issue11/features/cfractions/
+    http://archives.math.utk.edu/articles/atuyl/confrac/
+
