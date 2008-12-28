@@ -4,56 +4,80 @@ use strict;
 use warnings FATAL => 'all';
 use Data::Dumper;
 
-my %is_square = map { $_ * $_ => $_ } 1 .. 1000;
+my @P = (0,0);
 
-for my $i (2,3,5,6,7,8,10,11,12,13,23) {
-    print "period(sqrt($i))=", find_period($i);
+for my $m (1 .. 100) {
+    # Any string of five consecutive terms m^2 - 2 through m^2 + 2 for m>2
+    # in the sequence has the corresponding period lengths 4,2,0,1,2.
+    next unless $m > 2;
+    $P[$m * $m - 2] = 4;
+    $P[$m * $m - 1] = 2;
+    $P[$m * $m + 0] = 0;
+    $P[$m * $m + 1] = 1;
+    $P[$m * $m + 2] = 2;
 }
+
+check_known();
 
 my $odd = 0;
 
 for my $n (1 .. 10_000) {
-    warn "n=$n odd=$odd\n" if $n % 100 == 0;
-    if (my $sqrt = $is_square{$n}) {
-        warn "skipping perfect square: $sqrt^2=$n\n";
-        next;
-    }
-    $odd++ if find_period($n) % 2 == 1;
+    warn "n=$n odd=$odd\n" if $n % 500 == 0;
+    # note: we're following the convention that squares have period 0,
+    # which works nicely with this problem.
+    $odd++ if period($n) % 2 == 1;
 }
 
 print "count of numbers with odd period: $odd";
 
-my %per;
+# returns the period of the CF expansion of sqrt($n)
+sub period {
+    my $n = shift;
+    unless (defined $P[$n]) {
+        $P[$n] = find_period(sqrt($n));
+    }
+    return $P[$n];
+}
 
 sub find_period {
-    my $r = sqrt($_[0]);
-    my @terms;
-    my %seen;
-    while (1) {
-        my $t = next_term($r);
-        return $per{ $t->[0] } if $per{ $t->[0] };
-        push @terms, $t;
-        last if $seen{ $t->[0] };
-        $seen{ $t->[0] } = 1;
-        $r = $t->[2];
-    }
-    my $s = pop(@terms)->[0];
+    my $r = shift;
+    my $last = 2 * int($r);
     my $p = 0;
-    for (reverse @terms) {
+    while (1) {
         $p++;
-        last if $_->[0] eq $s;
+        $r = 1.0 / ($r - int($r));
+        last if int($r) == $last;
     }
-    $per{ $_->[0] } = $p for @terms;
     return $p;
 }
 
-my %nt;
-sub next_term {
-    my $x = shift;
-    my $s = sprintf '%.9f', $x;
-    $nt{$s} ||= do {
-        my $a = int($x);
-        my $f = 1.0 / ($x - $a);
-        [ $s, $a, $f ];
-    };
+sub check_known {
+    my %known = (
+        2   => 1,
+        3   => 2,
+        4   => 0,
+        5   => 1,
+        6   => 2,
+        7   => 4,
+        8   => 2,
+        9   => 0,
+        10  => 1,
+        100 => 0,
+        101 => 1,
+        102 => 2,
+        103 => 12,
+        104 => 2,
+        105 => 2,
+        106 => 9,
+        107 => 6,
+        108 => 8,
+        109 => 15,
+    );
+    for my $n (sort keys %known) {
+        my $p = period($n);
+        next unless $p != $known{$n};
+        die "Wrong period ($p) for n=$n (should be $known{$n}\n";
+    }
+    warn "Sanity checks pass.\n";
 }
+
