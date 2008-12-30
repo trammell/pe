@@ -30,3 +30,19 @@ sub throw {
     return $d1 + $d2;
 }
 
+sub chance {
+    return qw(
+        NULL NULL NULL NULL NULL NULL
+        GO JAIL C1 E3 H2
+        R1 next-R next-R next-U back-3
+    );
+}
+
+sub community_chest {
+    return qw(
+        NULL NULL NULL NULL NULL NULL NULL
+        NULL NULL NULL NULL NULL NULL NULL
+        GO JAIL
+    );
+}
+
