@@ -65,6 +65,7 @@ How many continued fractions for N <= 10000 have an odd period?
 
 Resources:
 
+    http://mathworld.wolfram.com/PeriodicContinuedFraction.html
     http://www.research.att.com/~njas/sequences/A003285
     http://home.att.net/~numericana/answer/fractions.htm
     http://en.wikipedia.org/wiki/Generalized_continued_fraction
