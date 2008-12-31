@@ -3,6 +3,7 @@
 use strict;
 use warnings FATAL => 'all';
 use base 'Exporter';
+use List::Util 'sum';
 use List::MoreUtils 'all';
 
 our @EXPORT = qw( as_string is_magic );
@@ -40,7 +41,12 @@ sub as_string {
         push @s, $inner[$i % $n];
         push @s, $inner[($i + 1) % $n];
     }
-    return join q( ), @s;
+    my $nice = join q(), @s;
+    my $s = sum @s[0 .. 2];
+    my $a = sum @outer;
+    my $b = sum @inner;
+    my $t = sum @outer, @inner;
+    return "$nice a=$a b=$b s=$s t=$t";
 }
 
 1;

@@ -150,4 +150,3 @@ Analysis of 10-gon:
 
         in general: a[i] + b[i] = a[i+1] + b[i+2]  { i = i mod 5 }
 
-
