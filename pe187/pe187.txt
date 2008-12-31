@@ -1,0 +1,15 @@
+
+http://projecteuler.net/index.php?section=problems&id=187
+
+Problem 187
+22 March 2008
+
+A composite is a number containing at least two prime factors. For example,
+15=3x5; 9=3x3; 12=2x2x3.
+
+There are ten composites below thirty containing precisely two, not
+necessarily distinct, prime factors: 4, 6, 9, 10, 14, 15, 21, 22, 25, 26.
+
+How many composite integers, n < 10^8, have precisely two, not necessarily
+distinct, prime factors?
+
