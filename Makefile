@@ -14,3 +14,5 @@ dist:
 	tar czf $(DIST).tar.gz $(DIST)
 	rm -rf $(DIST)
 
+# get the latest: git reset --hard
+
