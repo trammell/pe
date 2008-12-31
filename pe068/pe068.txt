@@ -58,7 +58,55 @@ form 16- and 17-digit strings. What is the maximum 16-digit string for a
 
 [Apologies for the ASCII art.  -JT]
 
-Analysis:
+Analysis of 3-gon:
+
+    a0-a2 = outer ring
+    b0-b2 = inner ring
+
+    define A = sum(a_i), B = sum(b_i), T = A + B
+
+    Note that "T" is the sum of all the numbers in the 3-gon. In the general
+    case of any N-gon, where N is odd, T is an integer multiple of N:
+
+        T = sum(1 .. n)
+          = n(n+1)/2
+          => n divides T, qed
+
+    define t = T / n
+    define s as the "magic" value each line sums to.  This gives:
+
+    a0 + b0 + b1 = s        (0)
+    a1 + b1 + b2 = s        (1)
+    a2 + b2 + b0 = s        (2)
+
+    A + B + B = 3s          [sum of 0,1,2]
+    T + B = 3s
+    B = 3s - T
+      = 3s - 3t
+      = 3(s - t)
+
+    A = 3s - 2B
+      = 3s - 2(3(s-t))
+      = 3s - 6(s-t)
+      = 3s - 6s + 6t
+      = 6t - 3s
+      = 3(2t - s)
+
+    Since B, s, and t are all integer for N odd, we know that N divides both B
+    and A.
+
+    Checking our work:
+
+    For the magic 3-gon above, we have A=15, B=6, s=9, T=21; t=7.
+
+        T % 3 = 0
+        A + B + B = 15 + 6 + 6 = 27 = 3s
+        A % 3 = 0
+        B % 3 = 0
+        3(s-t) = 3(9-7) = 3*2 = 6 = B
+        3(2t - s) = 3(14 - 9) = 15 = A
+
+Analysis of 10-gon:
 
     * for the string to have only 16 characters, the "10" value must be in the
       outer ring.  This gives four 3-digit strings plus one 4-digit string.
@@ -73,22 +121,33 @@ Analysis:
         a0-a4 = outer ring
         b0-b4 = inner ring
 
-        a0 + b0 + b1 = s
-        a1 + b1 + b2 = s
-        a2 + b2 + b3 = s
-        a3 + b3 + b4 = s
-        a4 + b4 + b0 = s
+        a0 + b0 + b1 = s        (0)
+        a1 + b1 + b2 = s        (1)
+        a2 + b2 + b3 = s        (2)
+        a3 + b3 + b4 = s        (3)
+        a4 + b4 + b0 = s        (4)
 
         in general:     a[i] + b[i] + b[(i+1)%n] = s
+
+            b[(i+1)%n] = s - a[i] - b[i]
+
+        define c[i] = a[i] + b[i]
+
+            b[i+1] = s - c[i]
 
         adding all 5 equations:
 
         sum(a_i) + 2 * sum(b_i) = 5s
 
-        subtracting (1) and (2) gives
+        subtracting (0) and (1) gives
 
-        a0 + b0 - a1 - b2 = 0
-        a0 + b0 = a1 + b2
+            a0 + b0 - a1 - b2 = 0
+
+        adding (2) gives:
+
+            a0 + b0 - a1 - b2 + a2 + b2 + b3 = s
+            a0 + b0 - a1 + a2 + b3 = s
 
         in general: a[i] + b[i] = a[i+1] + b[i+2]  { i = i mod 5 }
+
 
