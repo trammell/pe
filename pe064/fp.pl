@@ -4,19 +4,9 @@ use strict;
 use warnings FATAL => 'all';
 use Data::Dumper;
 
-my @P = (0,0);
+my @P;
 
-for my $m (1 .. 100) {
-    # Any string of five consecutive terms m^2 - 2 through m^2 + 2 for m>2
-    # in the sequence has the corresponding period lengths 4,2,0,1,2.
-    next unless $m > 2;
-    $P[$m * $m - 2] = 4;
-    $P[$m * $m - 1] = 2;
-    $P[$m * $m + 0] = 0;
-    $P[$m * $m + 1] = 1;
-    $P[$m * $m + 2] = 2;
-}
-
+init();
 check_known();
 
 my $odd = 0;
@@ -34,49 +24,56 @@ print "count of numbers with odd period: $odd";
 sub period {
     my $n = shift;
     unless (defined $P[$n]) {
-        $P[$n] = find_period(sqrt($n));
+        $P[$n] = _period($n);
     }
     return $P[$n];
 }
 
-sub find_period {
-    my $r = shift;
-    my $last = 2 * int($r);
-    my $p = 0;
-    while (1) {
+sub _period {
+    my $n  = shift;
+    my $a0 = int(sqrt($n));
+    my $b0 = $a0;
+    my $c0 = $n - $a0 * $a0;
+    my $p  = 0;
+
+    my $a;
+    my $b = $b0;
+    my $c = $c0;
+
+    do {
+        $a = int(($a0 + $b) / $c);
+        $b = $a * $c - $b;
+        $c = int(($n - $b * $b) / $c);
         $p++;
-        $r = 1.0 / ($r - int($r));
-        last if int($r) == $last;
-    }
+    } while ($b != $b0) || ($c != $c0);
     return $p;
 }
 
+sub init {
+    @P = (0,0,1,2,0,1,2);     # period for N=0,1,2,3,4,5,6
+    for my $m2 (map { $_ * $_ } 3 .. 100) {
+    # Any string of five consecutive terms m^2 - 2 through m^2 + 2 for m>2
+    # in the sequence has the corresponding period lengths 4,2,0,1,2.
+        $P[$m2 - 2] = 4;
+        $P[$m2 - 1] = 2;
+        $P[$m2]     = 0;
+        $P[$m2 + 1] = 1;
+        $P[$m2 + 2] = 2;
+    }
+}
+
 sub check_known {
-    my %known = (
-        2   => 1,
-        3   => 2,
-        4   => 0,
-        5   => 1,
-        6   => 2,
-        7   => 4,
-        8   => 2,
-        9   => 0,
-        10  => 1,
-        100 => 0,
-        101 => 1,
-        102 => 2,
-        103 => 12,
-        104 => 2,
-        105 => 2,
-        106 => 9,
-        107 => 6,
-        108 => 8,
-        109 => 15,
+    my @correct = (
+        0, 0, 1, 2, 0, 1, 2, 4, 2, 0,
+        1, 2, 2, 5, 4, 2, 0, 1, 2, 6,
+        2, 6, 6, 4, 2, 0, 1, 2, 4, 5,
+        2, 8, 4, 4, 4, 2, 0, 1, 2, 2,
+        2, 3, 2, 10, 8, 6, 12, 4, 2,
     );
-    for my $n (sort keys %known) {
+    for my $n (0 .. $#correct) {
         my $p = period($n);
-        next unless $p != $known{$n};
-        die "Wrong period ($p) for n=$n (should be $known{$n}\n";
+        next unless $p != $correct[$n];
+        die "Wrong period ($p) for n=$n (should be $correct[$n])\n";
     }
     warn "Sanity checks pass.\n";
 }
