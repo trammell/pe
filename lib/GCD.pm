@@ -11,5 +11,10 @@ sub gcd {
     return $b ? gcd($b, $a % $b) : $a;
 }
 
+sub lcm {
+    my ($a,$b) = @_;
+    return $a * $b / gcd($a,$b);
+}
+
 1;
 
