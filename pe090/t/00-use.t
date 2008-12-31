@@ -22,4 +22,8 @@ is(as_string($d), "1234");
 
 is(as_string(merge("111")),"1");
 
-
+{
+    my $d1 = merge("012368");
+    my $d2 = merge("134589");
+    ok(shows_all($d1,$d2));
+}
