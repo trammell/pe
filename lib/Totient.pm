@@ -1,10 +1,9 @@
-#!/usr/bin/perl -l
-# vim: set ai et ts=4 tw=75 :
+
+package Totient;
 
 use strict;
 use warnings;
 use base 'Exporter';
-
 use Primes;
 use List::Util 'reduce';
 
@@ -17,7 +16,7 @@ my $maxprime = $primes[-1];
 
 unless (caller()) {
     for (1 .. 20) {
-        print "Phi($_)=", Phi($_);
+        print "Phi($_)=", Phi($_),"\n";
     }
 }
 
