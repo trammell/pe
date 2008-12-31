@@ -49,8 +49,7 @@ sub complete {
 }
 
 sub as_string {
-    my $d = shift;
-    return join q(), grep { $d->[$_] } 0 .. 9;
+    return join q(), grep { $_[0][$_] } 0 .. 9;
 }
 
 sub shows_all {
@@ -72,23 +71,15 @@ sub shows_all {
 
     # can we represent "09" (or equivalently "06")?
     return 0 unless
-        ($d1->[0] && $d2->[9])
+        ($d1->[0] && ($d2->[6] || $d2->[9]))
         ||
-        ($d1->[0] && $d2->[6])
-        ||
-        ($d1->[9] && $d2->[0])
-        ||
-        ($d1->[6] && $d2->[0]);
+        ($d2->[0] && ($d1->[6] || $d1->[9]));
 
     # can we represent "16" (or equivalently "19")?
     return 0 unless
-        ($d1->[1] && $d2->[6])
+        ($d1->[1] && ($d2->[6] || $d2->[9]))
         ||
-        ($d1->[1] && $d2->[9])
-        ||
-        ($d1->[6] && $d2->[1])
-        ||
-        ($d1->[9] && $d2->[1]);
+        ($d2->[1] && ($d1->[6] || $d1->[9]));
 
     # can we represent "25"?
     return 0 unless
@@ -98,24 +89,16 @@ sub shows_all {
 
     # can we represent "36" (or equivalently "39")?
     return 0 unless
-        ($d1->[3] && $d2->[6])
+        ($d1->[3] && ($d2->[6] || $d2->[9]))
         ||
-        ($d1->[3] && $d2->[9])
-        ||
-        ($d1->[6] && $d2->[3])
-        ||
-        ($d1->[9] && $d2->[3]);
+        ($d2->[3] && ($d1->[6] || $d1->[9]));
 
     # two-for-one: if we can represent 49, then we can show 64 as well.
-    # can we represent "36" (or equivalently "39")?
+    # can we represent "49" (or equivalently "46")?
     return 0 unless
-        ($d1->[4] && $d2->[9])
+        ($d1->[4] && ($d2->[6] || $d2->[9]))
         ||
-        ($d1->[4] && $d2->[6])
-        ||
-        ($d1->[6] && $d2->[4])
-        ||
-        ($d1->[9] && $d2->[4]);
+        ($d2->[4] && ($d1->[6] || $d1->[9]));
 
     # can we represent "81"?
     return 0 unless
