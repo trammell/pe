@@ -40,21 +40,47 @@ Using the numbers 1 to 10, and depending on arrangements, it is possible to
 form 16- and 17-digit strings. What is the maximum 16-digit string for a
 "magic" 5-gon ring?
 
-              ( )
+              (a)
                  \
                   \
-                   ( )
-                 /     \    ( )
+                   (i)
+                 /     \    (b)
                 /       \   /
                /         \ /
-             ( )         ( )
+             (m)         (j)
              / \         /
             /   \       /
-          ( )   ( )---( )---( )
+          (e)   (l)---(k)---(c)
                   \
                    \
-                   ( )
+                   (d)
 
 
 [Apologies for the ASCII art.  -JT]
+
+Analysis:
+
+    * for the string to have only 16 characters, the "10" value must be in the
+      outer ring.  This gives four 3-digit strings plus one 4-digit string.
+    * this is convenient, because we can just put "10" into $outer[0] and
+      distribute 1-9 among the remaining spaces.
+    * 10!=3628800, 9!=362880
+    * what are valid magic numbers for the 5-gon?  The minimum sum is 6
+      (1+2+3) and the maximum is 27 (8+9+10).
+    * can we come up with a fast algorithm for generating magic 5-gon
+      figures?
+
+        abcde = outer ring
+        ijklm = inner ring
+
+        a + i + j = s       (1)
+        b + j + k = s       (2)
+        c + k + l = s       (3)
+        d + l + m = s       (4)
+        e + m + i = s       (5)
+
+        subtracting (1) and (2) gives
+
+        a + i - b - k = 0
+        a + i = b + k
 
