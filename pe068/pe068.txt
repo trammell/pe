@@ -40,20 +40,20 @@ Using the numbers 1 to 10, and depending on arrangements, it is possible to
 form 16- and 17-digit strings. What is the maximum 16-digit string for a
 "magic" 5-gon ring?
 
-              (a)
+              (a0)
                  \
                   \
-                   (i)
-                 /     \    (b)
+                   (b0)
+                 /     \    (a1)
                 /       \   /
                /         \ /
-             (m)         (j)
+             (b4)        (b1)
              / \         /
             /   \       /
-          (e)   (l)---(k)---(c)
+         (a4)   (b3)---(b2)---(a2)
                   \
                    \
-                   (d)
+                   (a3)
 
 
 [Apologies for the ASCII art.  -JT]
@@ -70,17 +70,25 @@ Analysis:
     * can we come up with a fast algorithm for generating magic 5-gon
       figures?
 
-        abcde = outer ring
-        ijklm = inner ring
+        a0-a4 = outer ring
+        b0-b4 = inner ring
 
-        a + i + j = s       (1)
-        b + j + k = s       (2)
-        c + k + l = s       (3)
-        d + l + m = s       (4)
-        e + m + i = s       (5)
+        a0 + b0 + b1 = s
+        a1 + b1 + b2 = s
+        a2 + b2 + b3 = s
+        a3 + b3 + b4 = s
+        a4 + b4 + b0 = s
+
+        in general:     a[i] + b[i] + b[(i+1)%n] = s
+
+        adding all 5 equations:
+
+        sum(a_i) + 2 * sum(b_i) = 5s
 
         subtracting (1) and (2) gives
 
-        a + i - b - k = 0
-        a + i = b + k
+        a0 + b0 - a1 - b2 = 0
+        a0 + b0 = a1 + b2
+
+        in general: a[i] + b[i] = a[i+1] + b[i+2]  { i = i mod 5 }
 
