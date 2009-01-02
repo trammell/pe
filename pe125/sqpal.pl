@@ -4,16 +4,15 @@ use strict;
 use warnings FATAL => 'all';
 use List::Util 'sum';
 
-my %square = map { $_ => $_ * $_ } 1 .. 12_000;
+my $LIMIT = 1e8;
+my $maxi = int(1 + sqrt($LIMIT / 2));
+
+my %square = map { $_ => $_ * $_ } 1 .. $maxi;
 
 my @pal;
 
-my $LIMIT = 10_000_000;
-#my $LIMIT = 1000;
-my $maxi = int(10 + sqrt($LIMIT));
-
 for my $i (1 .. $maxi) {
-    #print "i=$i pal=(@pal)" if $i % 10 == 0;
+    print "i=$i of $maxi" if $i % 100 == 0;
 
     for (my $n=$i*$i, my $j=$i + 1; $j < $maxi; $j++) {
         #print "$n += $square{$j}";
