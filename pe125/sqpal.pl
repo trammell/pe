@@ -12,7 +12,7 @@ while (1) {
     my $i = $#scs;
     print "i=$i" if $i % 100 == 0;
     push @scs, $scs[$i] + ($i + 1)*($i + 1);
-    last if $scs[-1] + $scs[-2] > $LIMIT;
+    last if $scs[-1] - $scs[-3] > $LIMIT;
 }
 
 print "@scs[0..9]";
