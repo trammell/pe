@@ -27,3 +27,8 @@ formed when each co-ordinate lies between 0 and 2 inclusive; that is,
 Given that 0 <= x1, x2, y1,y2 <= 50, how many right triangles can be
 formed?
 
+Analysis:
+
+    1x1     => 3
+    2x2     => 14 (3 + 11)
+
