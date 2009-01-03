@@ -55,27 +55,3 @@ sub part {
 
 1;
 
-__END__
-
-Problem 78
-10 September 2004
-
-Let p(n) represent the number of different ways in which n coins can be
-separated into piles. For example, five coins can separated into piles in
-exactly seven different ways, so p(5)=7.
-
-    1   OOOOO
-    2	OOOO O
-    3   OOO OO
-    4   OOO O O
-    5   OO OO O
-    6   OO O O O
-    7   O O O O O
-
-Find the least value of n for which p(n) is divisible by one million.
-
-Analysis:
-
-Google for "Partition Function".
-
-See http://www.research.att.com/~njas/sequences/A000041.
