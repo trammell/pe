@@ -39,7 +39,7 @@ sub nrt_interior {
 
     for my $x (0 .. $d - 1) {
         for my $y (0 .. $d - 1) {
-            next unless $x && $y;   # skip (0,0)
+            next unless $x || $y;   # skip (0,0)
             my $vi = [$x,$y];       # vector to interior
             for my $ve (@edge) {    # vector to edge
                 my $v = [
