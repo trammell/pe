@@ -15,55 +15,26 @@ for my $d (0 .. 3) {
 
 Returns the number of triangles OPQ
 
-
-
-
 =cut
 
 sub nrt {
     my $d = shift;
 
 
+
+
+
 }
 
-sub nrt_edge {
+sub nrt_interior {
+
+
+}
+
+sub nrt_boundary {
     my $d = shift;
-
-    # list all points on the boundary
-    my @edge;
-    push @edge, map [ $_, $d ], 0 .. $d;
-    push @edge, map [ $d, $_ ], 0 .. $d - 1;
-
-    # NOTE: can get a 50% speedup if we exploit symmetry here
-
-    my $count = 0;
-
-    for my $x1 (0 .. $d) {
-        for my $y1 (0 .. $d) {
-            next if $x1 == 0 && $y1 == 0;
-            for my $p (@edge) {
-                my ($x2,$y2) = @$p;
-                next if $x1 == $x2 && $y1 == $y2;
-
-                if ($y1 == 0) {
-                    if ($x2 == 0) {
-                        $count++;
-                    }
-                    elsif ($x1 > 0 && $x1 == $x2) {
-                        $count++;
-                    }
-                }
-                elsif ($x1 == 0) {
-                    if ($y1 > 0 && $y1 == $y2) {
-                        $count++;
-                    }
-                }
-            }
-        }
-    }
-
-    return $count;
-
+    return 0 if $d < 1;
+    return 3 * (2 * $d - 1);
 }
 
 
