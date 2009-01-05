@@ -53,6 +53,20 @@ product is zero:
 Here are some correct values, obtained from a correct but slow implementation
 of the solution:
 
+    nrt(1)=3
+    nrt(2)=14
+    nrt(3)=33
+    nrt(4)=62
+    nrt(5)=101
+    nrt(6)=148
+    nrt(7)=207
+    nrt(8)=276
+    nrt(9)=353
+    nrt(10)=448
+    nrt(11)=547
+    nrt(12)=662
+    nrt(13)=785
+    nrt(14)=920
     nrt(15)=1067
     nrt(16)=1230
     nrt(17)=1397
@@ -89,6 +103,4 @@ of the solution:
     nrt(48)=13046
     nrt(49)=13611
     nrt(50)=14234
-
-
 
