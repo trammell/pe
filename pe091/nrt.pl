@@ -7,10 +7,14 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (0 .. 5) {
-    print "nrt($d)=", nrt($d);
-    #print "nrt_interior($d)=", nrt_interior($d);
-    #print "nrt_boundary($d)=", nrt_boundary($d);
+# check the first ten values
+
+my @correct = (0,3,14,33,62,101,148);
+
+for my $d (0 .. $#correct) {
+    my $nrt = nrt($d);
+    next if $nrt == $correct[$d];
+    die "got nrt($d)=$nrt; correct value is $correct[$d]\n";
 }
 
 =head2 nrt($d)
@@ -25,17 +29,18 @@ sub nrt {
     my $d = shift;
     return 0 if $d < 1;
     unless (defined $NRT->[$d]) {
-        $NRT->[$d] = nrt($d - 1) + nrt_interior($d) + nrt_boundary($d);
+        $NRT->[$d] = nrt($d - 1) + calc_nrt($d);
     }
     return $NRT->[$d];
 }
 
-sub nrt_interior {
+sub calc_nrt {
     my $d = shift;
+    return 0 if $d < 1;
+
+    my $count = 3 * (2 * $d - 1);
 
     my @edge = map [ $_, $d ], 0 .. $d;
-
-    my $count = 0;
 
     for my $x (0 .. $d - 1) {
         for my $y (0 .. $d - 1) {
@@ -63,13 +68,6 @@ sub nrt_interior {
     }
 
     return $count;
-}
-
-# return the number of 
-sub nrt_boundary {
-    my $d = shift;
-    return 0 if $d < 1;
-    return 3 * (2 * $d - 1);
 }
 
 # returns true if vectors (u,v) are perpendicular
