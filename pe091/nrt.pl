@@ -7,10 +7,10 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (0 .. 3) {
+for my $d (0 .. 10) {
     print "nrt($d)=", nrt($d);
-    print "nrt_interior($d)=", nrt_interior($d);
-    print "nrt_boundary($d)=", nrt_boundary($d);
+    #print "nrt_interior($d)=", nrt_interior($d);
+    #print "nrt_boundary($d)=", nrt_boundary($d);
 }
 
 =head2 nrt($d)
@@ -67,9 +67,9 @@ sub nrt_boundary {
     return 3 * (2 * $d - 1);
 }
 
+# returns true if vectors (u,v) are perpendicular
 sub perp {
-    my ($v,$w) = @_;
-    my $dot = $v->[0] * $w->[0] + $v->[1] * $w->[1];
-    return (abs($dot) < 1e-9) ? 1 : 0;
+    my ($u,$v) = @_;
+    return (abs($u->[0] * $v->[0] + $u->[1] * $v->[1]) < 1e-9) ? 1 : 0;
 }
 
