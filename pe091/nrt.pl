@@ -7,7 +7,7 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (0 .. 10) {
+for my $d (0 .. 5) {
     print "nrt($d)=", nrt($d);
     #print "nrt_interior($d)=", nrt_interior($d);
     #print "nrt_boundary($d)=", nrt_boundary($d);
@@ -47,10 +47,14 @@ sub nrt_interior {
                     $vi->[1] - $ve->[1],
                 ];
                 if (perp($v,$ve)) {
+                    local $" = q(,);
+                    print "d=$d found ((0,0) (@$vi) (@$ve))";
                     $count += 2;
                     next;
                 }
                 elsif (perp($v,$vi)) {
+                    local $" = q(,);
+                    print "d=$d found ((0,0) (@$vi) (@$ve))";
                     $count += 2;
                     next;
                 }
@@ -61,6 +65,7 @@ sub nrt_interior {
     return $count;
 }
 
+# return the number of 
 sub nrt_boundary {
     my $d = shift;
     return 0 if $d < 1;
