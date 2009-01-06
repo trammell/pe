@@ -18,3 +18,12 @@ Resources:
     http://mathworld.wolfram.com/Ring.html
     http://mathworld.wolfram.com/topics/Congruences.html
 
+Thoughts:
+
+    define b = a-1
+
+    then    x   = (a-1)^n + (a+1)^n
+                = b^n + (b+2)^n
+
+    and     a^2 = b^2 + 2b + 1
+
