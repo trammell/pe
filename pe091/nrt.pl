@@ -13,8 +13,9 @@ my @correct = (0,3,14,33,62,101,148);
 
 for my $d (0 .. $#correct) {
     my $nrt = nrt($d);
+    print "nrt($d)=$nrt";
     next if $nrt == $correct[$d];
-    die "got nrt($d)=$nrt; correct value is $correct[$d]\n";
+    warn "!!! got nrt($d)=$nrt; correct value is $correct[$d]\n";
 }
 
 =head2 nrt($d)
@@ -40,26 +41,19 @@ sub calc_nrt {
 
     my $count = 3 * (2 * $d - 1);
 
-    my @edge = map [ $_, $d ], 0 .. $d;
+    my @edge = map [ $_, $d ], 0 .. $d - 1;
 
-    for my $x (0 .. $d - 1) {
-        for my $y (0 .. $d - 1) {
-            next unless $x || $y;   # skip (0,0)
+    for my $x (1 .. $d) {
+        for my $y (1 .. $d - 1) {
             my $vi = [$x,$y];       # vector to interior
             for my $ve (@edge) {    # vector to edge
                 my $v = [
                     $vi->[0] - $ve->[0],
                     $vi->[1] - $ve->[1],
                 ];
-                if (perp($v,$ve)) {
+                if (perp($v,$ve) || perp($v,$vi)) {
                     local $" = q(,);
-                    print "d=$d found ((0,0) (@$vi) (@$ve))";
-                    $count += 2;
-                    next;
-                }
-                elsif (perp($v,$vi)) {
-                    local $" = q(,);
-                    print "d=$d found ((0,0) (@$vi) (@$ve))";
+                    print "# d=$d found ((0,0) (@$vi) (@$ve))";
                     $count += 2;
                     next;
                 }
