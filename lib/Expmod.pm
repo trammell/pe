@@ -2,6 +2,9 @@ package Expmod;
 
 use strict;
 use warnings FATAL => 'all';
+use base 'Exporter';
+
+our @EXPORT_OK = ('expmod');
 
 =head2 expmod($a,$n,$m)
 
