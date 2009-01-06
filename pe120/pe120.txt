@@ -11,3 +11,10 @@ And as n varies, so too will r, but for a=7 it turns out that r_max=42.
 
 For 3 <= a <= 1000, find sum(r_max).
 
+Resources:
+
+    http://en.wikipedia.org/wiki/Modular_exponentiation
+    http://mathworld.wolfram.com/SuccessiveSquareMethod.html
+    http://mathworld.wolfram.com/Ring.html
+    http://mathworld.wolfram.com/topics/Congruences.html
+
