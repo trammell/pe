@@ -4,8 +4,8 @@ http://projecteuler.net/index.php?section=problems&id=100
 Problem 100
 15 July 2005
 
-If a box contains twenty-one coloured discs, composed of fifteen blue discs and
-six red discs, and two discs were taken at random, it can be seen that the
+If a box contains twenty-one coloured discs, composed of fifteen blue discs
+and six red discs, and two discs were taken at random, it can be seen that the
 probability of taking two blue discs, P(BB) = (15/21)*(14/20) = 1/2.
 
 The next such arrangement, for which there is exactly 50% chance of taking two
@@ -15,50 +15,77 @@ thirty-five red discs.
 By finding the first arrangement to contain over 10^12 = 1,000,000,000,000
 discs in total, determine the number of blue discs that the box would contain.
 
+Known Solutions:
+
+    T=4,B=3     => 3/4 * 2/3 = 1/2
+    T=21,B=15   => 15/21 * 14/20 = 1/2
+    T=120,B=85  => 85/120 * 84/119 = 1/2
+
 Analysis:
 
     b = number of blue discs
     r = number of red discs
     t = b + r = total number of discs
 
-     b    b-1   1
-    --- x --- = -
-     t    t-1   2
+         b    b-1   1
+        --- x --- = -
+         t    t-1   2
 
-    2b(b-1) = t(t-1)
+    Equivalently:
 
-    2bb - 2b = tt - t
-    2bb -2b + (t - tt) = 0
+        2b(b-1) = t(t-1)
 
-    quadratic formula:
+    Define m == b(b-1)
 
-        2 +- sqrt(4 - (4)(2)(t-tt))
-        ---------------------------
-                      4
+        2m = tt - t
 
-        b = 0.5 +- 0.25 * 2 * sqrt(1 - 2(t-tt))
-          = 0.5 +- 0.5 * sqrt(1 -2t + 2tt)
+        tt - t - 2m = 0
 
+            1 +/- sqrt(1 - 4 * 1 * (-2m))
+        t = -----------------------------
+                        2
 
-    define m = 2b(b-1)
+        2t = 1 + sqrt(8m + 1)
 
-    m = tt - t
+    Known solutions:
 
-    tt - t - m = 0
+        b=3 => m=6 => 2t=1+sqrt(49)=8 => t=4
 
-        1 +/- sqrt(1 - 4 * 1 * (-m))
-    t = ----------------------------
-                    2
+    Conditions:
 
-    t = 0.5 + 0.5 * sqrt(4m + 1)
+        8m+1 is odd (duh)
+        8m+1 is a perfect square
+        sqrt(8m+1) is also odd
 
-    t = 0.5 + 0.5 * sqrt(8b(b-1) + 1)
+    When is 8b(b-1) + 1 a perfect square?
 
-    so sqrt(8b(b-1) + 1) is even:
+        8bb - 8b + 1 = jj
 
-    => (8b(b-1) + 1) % 4 == 0
+        8bb - 8b + (1 - jj) = 0
 
-    => 8b(b-1) % 4 == 3
+            8 +/- sqrt(64 - (4)(8)(1-jj))
+        b = -----------------------------
+                        16
 
-    but when is 2bb - 2b + 1 a perfect square?
+        16b = 8 +/- sqrt(16 * (4 - 2(1-jj)))
+
+        16b = 8 +/- 4 * sqrt(4 - 2(1-jj))
+
+        16b = 8 +/- 4 * sqrt(4 - 2 + 2jj)
+
+        4b = 2 +/- sqrt(2jj + 2)        # choose the + branch
+
+        4b = 2 + sqrt(2jj + 2)
+
+        (b=3 => j=7)
+
+    When is 2jj + 2 a perfect square?
+
+        2jj + 2 = kk
+
+        jj = (kk/2) - 1
+
+        j = sqrt( (kk/2) - 1 )
+
+        (j=7 => k=10)
 
