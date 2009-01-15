@@ -55,7 +55,7 @@ sub nrt_interior {
 #   d=2 => 9
 sub nrt_edge {
     my $d = shift;
-    return 3 + 
+    return 3 + (2 * $d - 1) + (2 * $d - 1); # XXX wtf
     return 2 * $d + 1;
 }
 
