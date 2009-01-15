@@ -1,6 +1,6 @@
 #!/usr/bin/perl -l
 
-package PCF;
+package PCF;    # prime counting function "pi(n)"
 
 use strict;
 use warnings FATAL => 'all';
