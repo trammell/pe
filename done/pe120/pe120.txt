@@ -1,0 +1,29 @@
+
+http://projecteuler.net/index.php?section=problems&id=120
+
+Problem 120
+21 April 2006
+
+Let r be the remainder when ((a-1)^n + (a+1)^n) is divided by a^2.
+
+For example, if a=7 and n=3, then r=42: 6^3 + 8^3 = 728; 728 % 49 = 42.
+And as n varies, so too will r, but for a=7 it turns out that r_max=42.
+
+For 3 <= a <= 1000, find sum(r_max).
+
+Resources:
+
+    http://en.wikipedia.org/wiki/Modular_exponentiation
+    http://mathworld.wolfram.com/SuccessiveSquareMethod.html
+    http://mathworld.wolfram.com/Ring.html
+    http://mathworld.wolfram.com/topics/Congruences.html
+
+Thoughts:
+
+    define b = a-1
+
+    then    x   = (a-1)^n + (a+1)^n
+                = b^n + (b+2)^n
+
+    and     a^2 = b^2 + 2b + 1
+

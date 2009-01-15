@@ -7,8 +7,14 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (0 .. 3) {
-#   print "nrt_edge($d)=", nrt_edge($d);
+
+my @correct = (0,3,14,33,62,101,148);
+
+for my $d (0 .. $#correct) {
+    my $nrt = nrt($d);
+    print "nrt($d)=$nrt";
+    next if $nrt == $correct[$d];
+    warn "!!! got nrt($d)=$nrt; correct value is $correct[$d]\n";
 }
 
 print is_rt([1,1],[0,2]);
@@ -83,5 +89,11 @@ sub is_rt {
     return 1 if abs($t2) < 1e-6;
 
     return 0;
+}
+
+# returns true if vectors (u,v) are perpendicular
+sub perp {
+    my ($u,$v) = @_;
+    return (abs($u->[0] * $v->[0] + $u->[1] * $v->[1]) < 1e-9) ? 1 : 0;
 }
 
