@@ -3,32 +3,33 @@ package Primes;
 use strict;
 use warnings FATAL => 'all';
 use base 'Exporter';
+use IO::Zlib;
+use Time::HiRes qw( gettimeofday tv_interval );
 
-our @PRIMES;
-require PrimeList;
-my $MAX = $PRIMES[-1];
 our @EXPORT = qw( primes is_prime );
 
+my @PRIMES;
+
 sub primes {
+    load() unless @PRIMES;
     return @PRIMES;
 }
 
 sub max_prime {
-    return $MAX;
-}
-
-unless (caller()) {
-    print "primes are: @PRIMES[0 .. 9] ... $MAX\n";
+    load() unless @PRIMES;
+    return $PRIMES[-1];
 }
 
 my $lookup;
 sub is_prime {
     my $n = shift;
-    $lookup ||= { map { $_ => 1 } primes() };
+    load() unless @PRIMES;
+    $lookup ||= { map { $_ => 1 } @PRIMES };
     if ($n <= 1_000_000) {
-        return $lookup->{ $n };
+        return $lookup->{ $n } ? 1 : 0;
     }
 
+    # for $n sufficiently small, use trial division to test primality
     my $s = 1 + int(sqrt($n));
     if ($s <= 1_000_000) {
         for (my $i=0; $PRIMES[$i] < $s; $i++) {
@@ -38,6 +39,20 @@ sub is_prime {
     }
 
     die "is_prime(n=$n) out of range";
+}
+
+sub load {
+    return if @PRIMES;
+    my $t = [gettimeofday];
+    my $fh = IO::Zlib->new;
+    $fh->open("known-primes.txt.gz", "rb") or die $!;
+    while (<$fh>) {
+        chomp;
+        push @PRIMES, $_;
+    }
+    $fh->close;
+    warn "Loaded @{[ scalar @PRIMES ]} primes (@PRIMES[0 .. 5] ... ",
+        "$PRIMES[-1]) in @{[ tv_interval($t) ]} seconds\n";
 }
 
 1;

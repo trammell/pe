@@ -7,7 +7,6 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-# check the first ten values
 
 my @correct = (0,3,14,33,62,101,148);
 
@@ -18,50 +17,78 @@ for my $d (0 .. $#correct) {
     warn "!!! got nrt($d)=$nrt; correct value is $correct[$d]\n";
 }
 
+print is_rt([1,1],[0,2]);
+print is_rt([1,1],[1,2]);
+
+exit;
+
 =head2 nrt($d)
 
-Returns the number of triangles OPQ
+Returns the number of triangles OPQ in the first quadrant.
 
 =cut
 
 my $NRT;
-
 sub nrt {
     my $d = shift;
-    return 0 if $d < 1;
+    $NRT ||= [0,3];
     unless (defined $NRT->[$d]) {
-        $NRT->[$d] = nrt($d - 1) + calc_nrt($d);
+        $NRT->[$d] = nrt_interior($d) + nrt_edge($d);
     }
     return $NRT->[$d];
 }
 
-sub calc_nrt {
+sub nrt_interior {
     my $d = shift;
-    return 0 if $d < 1;
+    my @ep = edge_points($d);
+    my $count = 0;
 
-    my $count = 3 * (2 * $d - 1);
-
-    my @edge = map [ $_, $d ], 0 .. $d - 1;
-
-    for my $x (1 .. $d) {
-        for my $y (1 .. $d - 1) {
-            my $vi = [$x,$y];       # vector to interior
-            for my $ve (@edge) {    # vector to edge
-                my $v = [
-                    $vi->[0] - $ve->[0],
-                    $vi->[1] - $ve->[1],
-                ];
-                if (perp($v,$ve) || perp($v,$vi)) {
-                    local $" = q(,);
-                    print "# d=$d found ((0,0) (@$vi) (@$ve))";
-                    $count += 2;
-                    next;
-                }
+    for my $x (0 .. $d - 1) {
+        for my $y (0 .. $d - 1) {
+            next unless $x && $y;   # skip (0,0)
+            for my $e (@ep) {
+                next unless is_rt([$x,$y],$e);
+                $count++;
             }
         }
     }
 
     return $count;
+}
+
+# return the number of triangles with two points on the edge
+#   d=1 => 3
+#   d=2 => 9
+sub nrt_edge {
+    my $d = shift;
+    return 3 + (2 * $d - 1) + (2 * $d - 1); # XXX wtf
+    return 2 * $d + 1;
+}
+
+# list all points on the boundary (x == d || y == d)
+sub edge_points {
+    my $d = shift;
+    my @edge = map [ $_, $d ], 0 .. $d;
+    push @edge, map [ $d, $_ ], reverse 0 .. $d - 1;
+    return @edge;
+}
+
+# return true if the points represent a right triangle
+sub is_rt {
+    my @p = @{ $_[0] };
+    my @q = @{ $_[1] };
+
+    # is OP perpendicular to PQ?
+    my $t1 = $p[0] * ($p[0] - $q[0]) + $p[1] * ($p[1] - $q[1]);
+    #print "t1=$t1";
+    return 1 if abs($t1) < 1e-6;
+
+    # is OQ perpendicular to PQ?
+    my $t2 = $q[0] * ($p[0] - $q[0]) + $q[1] * ($p[1] - $q[1]);
+    #print "t2=$t2";
+    return 1 if abs($t2) < 1e-6;
+
+    return 0;
 }
 
 # returns true if vectors (u,v) are perpendicular
