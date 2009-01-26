@@ -37,3 +37,23 @@ must be used?
 
 NOTE: This is related to problem 117.
 
+Analysis:
+
+N(0,red) = 0 ("")
+N(1,red) = 0 ("K")
+N(2,red) = 1 ("RR" "KK")
+N(3,red) = 2 ("RRK" "KRR" "KKK")
+N(4,red) = 4 ("RRRR" "RRKK" "KRRK" "KKRR", "KKKK")
+
+This  is just the fibonacci series, minus 1
+
+for N(i,green)
+
+   TG(i) = TG(i-1) + TG(i-3)
+
+What is the name of this?  Generalized fibonacci series?
+
+for N(i,blue)
+
+   TB(i) = TB(i-1) + TB(i-4)
+
