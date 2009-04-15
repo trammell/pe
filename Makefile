@@ -1,18 +1,20 @@
 
-  STAMP := $(shell date '+%Y%m%d.%H%M%S')
-   DIST := project-euler.$(STAMP)
+     STAMP := $(shell date '+%Y%m%d.%H%M%S')
+      DIST := project-euler.$(STAMP)
+   DISTDIR := Dist/$(DIST)
 
 usage:
 	@echo "usage: [clean]"
 
 clean:
-	rm -rf project-euler.[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].*
+	rm -rf Dist/
+	rm -f *.tar.gz
 
 dist:
-	mkdir -p $(DIST)
-	cp -a Makefile bin done lib pe* $(DIST)
-	tar czf $(DIST).tar.gz $(DIST)
-	rm -rf $(DIST)
+	mkdir -p $(DISTDIR)
+	cp -a Makefile bin done lib pe* $(DISTDIR)
+	tar czf $(DIST).tar.gz $(DISTDIR)
+	rm -rf $(DISTDIR)
 
-# get the latest: git reset --hard
+# to get the latest: git reset --hard
 
