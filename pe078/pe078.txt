@@ -30,3 +30,12 @@ Analysis:
 
     P(n) == 0 mod 5^a if 24n == 1 mod 5^a
 
+p(k,n) = p(k+1,n) + p(k,n-k) otherwise
+
+    k = n-1
+
+        p(n-1,n) = p(n,n) + p(n-1,n-(n-1))
+                 = 1 + p(n-1,1)
+
+
+
