@@ -18,3 +18,6 @@ dist:
 
 # to get the latest: git reset --hard
 
+test:
+	prove -l t/
+
