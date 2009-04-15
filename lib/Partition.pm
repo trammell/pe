@@ -37,8 +37,10 @@ our @EXPORT_OK = qw( Pt );
 my $Pt;
 my $TRUNC = 1_000_000;
 
+our $in_setup = 0;
+
 sub Pt {
-    my ($k,$n,$skip_setup) = @_;
+    my ($k,$n) = @_;
 
     # boundary conditions
     return 0 if $n < 0;
@@ -48,7 +50,7 @@ sub Pt {
 
     unless (exists $Pt->{$k}{$n}) {
 
-        unless ($skip_setup) {
+        unless ($in_setup) {
             # preemptively calculate the necessary predecessors to calculate Pt($k,$n)
             # for $k <= $i <= $n + 1
             setup($n);
@@ -57,24 +59,29 @@ sub Pt {
         if (($k % 100 == 0) && ($n % 100 == 0)) {
             print "calculating Pt(k=$k,n=$n) ...";
         }
-        my $p1 = Pt($k + 1, $n, $skip_setup);
-        my $p2 = Pt($k, $n - $k, $skip_setup);
+        my $p1 = Pt($k + 1, $n);
+        my $p2 = Pt($k, $n - $k);
         $Pt->{$k}{$n} = ($p1 + $p2) % $TRUNC;
     }
     return $Pt->{$k}{$n};
 }
 
+my $last_setup = 0;
+
 sub setup {
+    return if $in_setup;
+    local $in_setup = 1;
     my $max = shift;
-    for (my $n = 1; $n <= $max; $n++) {
+    return if $max <= $last_setup;
+    for (my $n = $last_setup; $n <= $max; $n++) {
         for my $k (reverse(1 .. $n)) {
-            next if exists $Pt->{$k}{$n};
             if (($k % 100 == 0) && ($n % 100 == 0)) {
                 print "initializing Pt($k,$n)...";
             }
-            Pt($k,$n,1);
+            Pt($k,$n);
         }
     }
+    $last_setup = $max;
 }
 
 1;

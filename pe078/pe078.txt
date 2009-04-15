@@ -21,6 +21,7 @@ Resources:
     http://en.wikipedia.org/wiki/Partition_function_(number_theory)
     http://mathworld.wolfram.com/PartitionFunctionP.html
     http://mathworld.wolfram.com/PartitionFunctionPCongruences.html
+    http://www.research.att.com/~njas/sequences/Sindx_Par.html#partN
 
 Analysis:
 
