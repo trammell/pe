@@ -57,7 +57,7 @@ sub Pt {
         }
 
         if (($k % 100 == 0) && ($n % 100 == 0)) {
-            print "calculating Pt(k=$k,n=$n) ...";
+            warn "calculating Pt(k=$k,n=$n) ...\n";
         }
         my $p1 = Pt($k + 1, $n);
         my $p2 = Pt($k, $n - $k);
@@ -76,7 +76,7 @@ sub setup {
     for (my $n = $last_setup; $n <= $max; $n++) {
         for my $k (reverse(1 .. $n)) {
             if (($k % 100 == 0) && ($n % 100 == 0)) {
-                print "initializing Pt($k,$n)...";
+                warn "initializing Pt($k,$n)...\n";
             }
             Pt($k,$n);
         }
