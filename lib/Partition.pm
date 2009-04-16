@@ -48,21 +48,26 @@ sub Pt {
     return 0 if $k > $n;
     return 1 if $k == $n;
 
-    unless (exists $Pt->{$k}{$n}) {
+    if ($Pt->{$k}{$n}) {
+        return $Pt->{$k}{$n};
+    }
 
-        unless ($in_setup) {
-            # preemptively calculate the necessary predecessors to calculate Pt($k,$n)
-            # for $k <= $i <= $n + 1
-            setup($n);
-        }
-
+    if ($in_setup) {
+        # do nothing
+    }
+    else {
+        # preemptively calculate the necessary predecessors to calculate Pt($k,$n)
+        # for $k <= $i <= $n + 1
         if (($k % 100 == 0) && ($n % 100 == 0)) {
             warn "calculating Pt(k=$k,n=$n) ...\n";
         }
-        my $p1 = Pt($k + 1, $n);
-        my $p2 = Pt($k, $n - $k);
-        $Pt->{$k}{$n} = ($p1 + $p2) % $TRUNC;
+        setup($n);
     }
+
+    my $p1 = $Pt->{$k + 1}{$n}  || Pt($k + 1, $n);
+    my $p2 = $Pt->{$k}{$n - $k} || Pt($k, $n - $k);
+
+    $Pt->{$k}{$n} = ($p1 + $p2) % $TRUNC;
     return $Pt->{$k}{$n};
 }
 
@@ -75,7 +80,7 @@ sub setup {
     return if $max <= $last_setup;
     for (my $n = $last_setup; $n <= $max; $n++) {
         for my $k (reverse(1 .. $n)) {
-            if (($k % 100 == 0) && ($n % 100 == 0)) {
+            if (($k % 250 == 0) && ($n % 250 == 0)) {
                 warn "initializing Pt($k,$n)...\n";
             }
             Pt($k,$n);
