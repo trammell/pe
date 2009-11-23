@@ -4,6 +4,7 @@ package Monopoly;
 use strict;
 use warnings FATAL => 'all';
 use Data::Dumper;
+use List::Util qw/ shuffle /;
 
 use constant SPACES => qw/
     GO   A1 CC1 A2  T1 R1 B1  CH1 B2 B3
@@ -26,7 +27,32 @@ use constant CHANCE => qw/
 
 sub new {
     my $class = shift;
-    return bless {}, $class;
+    my $self = bless {}, $class;
+    $self->die_size(6);
+    $self->{cchest} = [ shuffle CCHEST ];
+    $self->{chance} = [ shuffle CHANCE ];
+}
+
+sub take_turn {
+    my $self = shift;
+    TURN: {
+        my $t = $self->throw();
+
+
+    }
+    $self->
+}
+
+sub position {
+
+
+}
+
+sub next_cchest {
+    my $self = shift;
+    my $pos = $self->{cchest_pos} || 0;
+    $self->{cchest_pos} = ($pos + 1) % scalar(@{ $self->{cchest} });
+    return $self->{cchest}->[$pos];
 }
 
 sub die_size {
