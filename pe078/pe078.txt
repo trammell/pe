@@ -1,35 +1,42 @@
 Problem 78
 10 September 2004
+http://projecteuler.net/index.php?section=problems&id=78
 
 Let p(n) represent the number of different ways in which n coins can be
 separated into piles. For example, five coins can separated into piles in
 exactly seven different ways, so p(5)=7.
 
-    1   OOOOO
-    2   OOOO O
-    3   OOO OO
-    4   OOO O O
-    5   OO OO O
-    6   OO O O O
-    7   O O O O O
+   1     OOOOO
+   2     OOOO O
+   3     OOO OO
+   4     OOO O O
+   5     OO OO O
+   6     OO O O O
+   7     O O O O O
 
 Find the least value of n for which p(n) is divisible by one million.
 
 Resources:
 
-    http://www.research.att.com/~njas/sequences/A000041.
-    http://en.wikipedia.org/wiki/Partition_function_(number_theory)
-    http://mathworld.wolfram.com/PartitionFunctionP.html
-    http://mathworld.wolfram.com/PartitionFunctionPCongruences.html
-    http://www.research.att.com/~njas/sequences/Sindx_Par.html#partN
+   http://en.wikipedia.org/wiki/Partition_function_(number_theory)
+   http://www.research.att.com/~njas/sequences/A000041.
+   http://mathworld.wolfram.com/Partition.html
+   http://mathworld.wolfram.com/PartitionFunctionP.html
+   http://mathworld.wolfram.com/PartitionFunctionPCongruences.html
+   http://www.research.att.com/~njas/sequences/Sindx_Par.html#partN
+   http://home.att.net/~numericana/data/partition.htm
+   http://home.att.net/~numericana/answer/numbers.htm#partitions
+   http://www.research.att.com/~njas/sequences/A008284
 
 Analysis:
 
-    1 million = 10^6 = 2^6 * 5^6
 
-    P(5m+4) == 0 mod 5 (Ramanujan)
 
-    P(n) == 0 mod 5^a if 24n == 1 mod 5^a
+   1 million = 10^6 = 2^6 * 5^6
+
+   P(5m+4) == 0 mod 5 (Ramanujan)
+
+   P(n) == 0 mod 5^a if 24n == 1 mod 5^a
 
 p(k,n) = p(k+1,n) + p(k,n-k) otherwise
 

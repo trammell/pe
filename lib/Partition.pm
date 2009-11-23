@@ -1,92 +1,88 @@
-
 package Partition;
 
 use strict;
 use warnings FATAL => 'all';
 use base 'Exporter';
 
-our @EXPORT_OK = qw( Pt );
+our @EXPORT_OK = qw/ nip p ip /;
 
 =head1 FUNCTIONS
 
-=head2 P($k,$n)
+=head2 p($n)
 
-=cut
-###
-### my $P;
-### sub P {
-###     my ($k,$n) = @_;
-###     return 0 if $n < 0 || $k < 0;
-###     return 0 if $k > $n;
-###     return 1 if $k == $n;
-###     unless ($P->{$k}{$n}) {
-###         for (my $i=$n+1; $i > 0; $i--) {
-###             my $p1 = P($i + 1,$n);
-###             my $p2 = P($i,$n-$i);
-###             $P->{$i}{$n} = $p1 + $p2;
-###         }
-###     }
-###     return $P->{$k}{$n};
-### }
-
-=head2 Pt($k,$n)
+Returns the number of partitions of C<$n>.
 
 =cut
 
-
-my $Pt;
-my $TRUNC = 1_000_000;
-
-our $in_setup = 0;
-
-sub Pt {
-    my ($k,$n) = @_;
-
-    # boundary conditions
-    return 0 if $n < 0;
-    return 0 if $k < 0;
-    return 0 if $k > $n;
-    return 1 if $k == $n;
-
-    if ($Pt->{$k}{$n}) {
-        return $Pt->{$k}{$n};
-    }
-
-    if ($in_setup) {
-        # do nothing
-    }
-    else {
-        # preemptively calculate the necessary predecessors to calculate Pt($k,$n)
-        # for $k <= $i <= $n + 1
-        if (($k % 100 == 0) && ($n % 100 == 0)) {
-            warn "calculating Pt(k=$k,n=$n) ...\n";
-        }
-        setup($n);
-    }
-
-    my $p1 = $Pt->{$k + 1}{$n}  || Pt($k + 1, $n);
-    my $p2 = $Pt->{$k}{$n - $k} || Pt($k, $n - $k);
-
-    $Pt->{$k}{$n} = ($p1 + $p2) % $TRUNC;
-    return $Pt->{$k}{$n};
+sub p {
+    my $n = shift;
+    return ip(1,$n);
 }
 
-my $last_setup = 0;
+=head2 nip($k,$n)
 
-sub setup {
-    return if $in_setup;
-    local $in_setup = 1;
-    my $max = shift;
-    return if $max <= $last_setup;
-    for (my $n = $last_setup; $n <= $max; $n++) {
-        for my $k (reverse(1 .. $n)) {
-            if (($k % 250 == 0) && ($n % 250 == 0)) {
-                warn "initializing Pt($k,$n)...\n";
-            }
-            Pt($k,$n);
+This is a naive implementation of the I<intermediate> partition function as
+described in Wikipedia at
+L<http://en.wikipedia.org/wiki/Partition_function_%28number_theory%29>.  It
+returns the number of partitions of C<$n> using only natural numbers at least
+as large as C<$k>.
+
+=cut
+
+sub nip {
+    my ($n,$k) = @_;
+    return 0 if $n < 0 || $k < 0;
+    return 0 if $k > $n;
+    return 1 if $k == $n;
+    return nip($n,$k + 1) + nip($n-$k,$k);
+}
+
+=head2 ip($n,$k)
+
+This is an implementation of the I<intermediate> partition function that uses
+caching to improve performance.
+
+=cut
+
+my $IP;
+
+sub ip {
+    my ($n,$k) = @_;
+
+    # logical conditions according to the function definition; don't bother
+    # cacheing these
+    return 0 if $n < 1;
+    return 0 if $k < 1;
+    return 0 if $k > $n;
+    return 1 if $k == $n;
+    return 1 if $n < 2 * $k;
+
+    # return the cached answer if we already know it
+    if ($IP->{$k}{$n}) {
+        my $grid = 10;
+        if ($n % $grid == 0 && $k % $grid == 0) {
+            warn "# ip($k,$n) = $IP->{$k}{$n}\n";
         }
+        return $IP->{$k}{$n};
     }
-    $last_setup = $max;
+
+    # we have to calculate ip($k,$n)
+    $IP->{$k}{$n} ||= do {
+        for my $_n (1 .. $n) {
+            next if $IP->{$_n}{$_n};
+            for my $_k (reverse $k + 1 .. $_n) {
+                ip($_k,$_n,1);
+            }
+        }
+        my $p1 = ip($k + 1,$n);
+        my $p2 = ($n >= 2 * $k) ? ip($k,$n-$k) : 0;
+        $p1 + $p2 % 1_000_000;
+    };
+}
+
+sub ip_calc {
+
+
 }
 
 1;
