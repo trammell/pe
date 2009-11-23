@@ -31,22 +31,43 @@ sub new {
     $self->die_size(6);
     $self->{cchest} = [ shuffle CCHEST ];
     $self->{chance} = [ shuffle CHANCE ];
+    $self->{position} = 0;
+    return $self;
 }
 
 sub take_turn {
     my $self = shift;
-    TURN: {
-        my $t = $self->throw();
 
+    $self->incr_turn;
 
-    }
-    $self->
+#   TURN: {
+#       my $t = $self->throw();
+#       $self->advance
+
+#       if $self->position_is_cchest() ...
+
+#       if $self->position_is_chance() ...
+
+#       if $self->position_is_gotojail() ...
+
+#   }
+#   $self->
 }
 
 sub position {
 
 
 }
+
+sub advance {
+    my ($self,$n) = @_;
+    $self->{position} += $n;
+    $self->{position} %= 40;
+    return $self->{position};
+}
+
+sub cchest { return $_[0]->{cchest}; }
+sub chance { return $_[0]->{chance}; }
 
 sub next_cchest {
     my $self = shift;
@@ -63,8 +84,7 @@ sub die_size {
 
 sub throw {
     my $self = shift;
-    my @d = map { int(1 + rand($self->{die_size})) } 0, 1;
-    return $d[0] + $d[1];
+    return map { int(1 + rand($self->{die_size})) } 0, 1;
 }
 
 1;
