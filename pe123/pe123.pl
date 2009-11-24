@@ -2,9 +2,18 @@
 
 use strict;
 use warnings;
+use lib '../lib';
 use Sieve;
 
+my @PRIMES = Sieve->primes;
 
+for my $i (0 .. 10) {
+    my $n = $i + 1;
+    my $p = $PRIMES[$i];
+    my $x = ($p - 1) ** $n + ($p + 1) ** $n;
+    my $r = $x % ($p * $p);
+    print "n=$n p=$p r=$r\n";
+}
 
 
 __END__
