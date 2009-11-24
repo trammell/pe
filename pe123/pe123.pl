@@ -1,8 +1,6 @@
-
-http://projecteuler.net/index.php?section=problems&id=123
-
 Problem 123
 16 June 2006
+http://projecteuler.net/index.php?section=problems&id=123
 
 Let p[n] be the nth prime: 2, 3, 5, 7, 11, ..., and let r be the remainder
 when (p[n]-1)^n + (p[n]+1)^n is divided by p[n]^(2).
