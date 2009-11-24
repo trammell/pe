@@ -5,6 +5,7 @@ use warnings FATAL => 'all';
 use base 'Exporter';
 use IO::Zlib;
 use Time::HiRes qw( gettimeofday tv_interval );
+use File::Basename 'dirname';
 
 our @EXPORT = qw( primes is_prime );
 
@@ -45,7 +46,8 @@ sub load {
     return if @PRIMES;
     my $t = [gettimeofday];
     my $fh = IO::Zlib->new;
-    $fh->open("known-primes.txt.gz", "rb") or die $!;
+    my $path = dirname $INC{'Primes.pm'};
+    $fh->open("$path/known-primes.txt.gz", "rb") or die $!;
     while (<$fh>) {
         chomp;
         push @PRIMES, $_;

@@ -1,8 +1,11 @@
-package Foo;
+package Factor;
 
 use strict;
 use warnings FATAL => 'all';
+use Exporter 'import';
 use Primes;
+
+our @EXPORT_OK = qw/ factor pf /;
 
 my @primes = primes();
 
