@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 use Time::HiRes;
 
 our $VERBOSE;           # verbosity switch
-my  $MAX = 100_000;     # largest possible prime found
+my  $MAX = 200_000;     # largest possible prime found
 my  @PRIMES;            # ordered list of known primes
 
 sub import {

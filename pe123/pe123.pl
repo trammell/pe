@@ -1,3 +1,14 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Sieve;
+
+
+
+
+__END__
+
 Problem 123
 16 June 2006
 http://projecteuler.net/index.php?section=problems&id=123
