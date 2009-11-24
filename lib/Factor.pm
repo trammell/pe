@@ -29,5 +29,28 @@ sub factor {
     return @f;
 }
 
+=head2 pf($n)
+
+Returns the full prime factorization of C<$n>, in the form of a hash whose
+keys are primes, and corresponding values are the multiplicity of those
+primes.
+
+=cut
+
+sub pf {
+    my $n = shift;
+    my %pf;
+    my @primes = primes();
+    while (@primes && $n > 1) {
+        my $p = shift @primes;
+        next unless $n % $p == 0;
+        while ($n % $p == 0) {
+            $pf{$p}++;
+            $n /= $p;
+        }
+    }
+    return %pf;
+}
+
 1;
 
