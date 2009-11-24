@@ -31,3 +31,16 @@ The least value of n for which the remainder first exceeds 10^9 is 7037.
 
 Find the least value of n for which the remainder first exceeds 10^10.
 
+Analysis:
+
+    (p+1)^n = p^n + C(n,1)p^(n-1) + C(n,2)p^(n-2) + ... + C(n,n-1)p + 1
+
+    (p-1)^n = p^n - C(n,1)p^(n-1) + C(n,2)p^(n-2) + ... + C(n,n-1)(-1)^(n-1)p + (-1)^n
+
+Adding the two yields:
+
+    2 * p^n + 2 * C(n,2)p^(n-2) + 2 * C(n,4)p^(n-4) + ...
+
+
+
+
