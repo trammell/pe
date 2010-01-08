@@ -10,9 +10,10 @@ and a fly, F, sits in the opposite corner. By travelling on the surfaces of
 the room the shortest "straight line" distance from S to F is 10 and the
 path is shown on the diagram.
 
-    Description: The spider is at (x=0,y=0,z=0), the fly is at
-    (x=6,y=5,z=3).  The path on the surface of the cuboid consists of the
-    segments ((0,0,0), (?,5,0), (6,5,3)).
+   Textual description of image: The spider is at (x=0,y=0,z=0), the fly is
+   at (x=6,y=5,z=3).  The path on the surface of the cuboid consists of
+   segments connecting the points (0,0,0), (X,5,0), (6,5,3), X not
+   specified here.
 
 However, there are up to three "shortest" path candidates for any given
 cuboid and the shortest route is not always integer.
