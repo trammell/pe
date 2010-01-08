@@ -6,9 +6,9 @@ use Monopoly;
 # run a game with six-sided dice
 
 my $m = Monopoly->new();
-$m->die_size(6);
+$m->die_size(4);
 
-for my $i (1 .. 200_000) {
+for my $i (1 .. 1_000_000) {
     warn "i=$i\n" if $i % 10_000 == 0;
     $m->take_turn;
 }
