@@ -1,3 +1,4 @@
+"Exploring the shortest path from one corner of a cuboid to another."
 
 http://projecteuler.net/index.php?section=problems&id=86
 
