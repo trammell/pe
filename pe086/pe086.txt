@@ -35,4 +35,12 @@ triple?
 
 we're interested in both primitive and nonprimitive triples
 
+Define F(M) as the number of solutions where cuboids have size less than or
+   equal to M.
+Define f(M) as the number of solutions where cuboids have size of their
+   longest edge equal to M.
+
+Then
+   F(M) = F(M-1) + f(M)
+
 
