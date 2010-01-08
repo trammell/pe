@@ -26,3 +26,13 @@ first exceeds two thousand; the number of solutions is 1975 when M=99.
 Find the least value of M such that the number of solutions first exceeds
 one million.
 
+Analysis:
+
+Pythagorean triples-- (6,8,10) is one
+
+Example cuboid is (3,5,6) => are any of (3,11) or (5,9) or (6,8) the (a,b) legs in a
+triple?
+
+we're interested in both primitive and nonprimitive triples
+
+
