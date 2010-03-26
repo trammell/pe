@@ -33,7 +33,11 @@ sub nrt {
     my $d = shift;
     $NRT ||= [0,3];
     unless (defined $NRT->[$d]) {
-        $NRT->[$d] = nrt_edge($d) + nrt_interior($d);
+        my $p = $NRT->[$d - 1];
+        my $e = nrt_edge($d);
+        my $i = nrt_interior($d);
+        warn "# p($d)=$p e($d)=$e i($d)=$i\n";
+        $NRT->[$d] = $p + $e + $i;
     }
     return $NRT->[$d];
 }
@@ -55,11 +59,13 @@ sub nrt_interior {
     my @ep = edge_points($d);
     my $count = 0;
 
-    for my $x (0 .. $d - 1) {
-        for my $y ($x .. $d - 1) {
-            next unless $x && $y;   # skip (0,0)
+    for my $x (1 .. $d - 1) {
+        for my $y (1 .. $d - 1) {
             for my $e (@ep) {
-                $count += 2 if is_rt([$x,$y],$e);
+                if (is_rt([$x,$y],$e)) {
+                    $count++;
+                    warn "# RT ($x,$y),($e->[0],$e->[1])\n";
+                }
             }
         }
     }
