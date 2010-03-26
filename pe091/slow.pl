@@ -7,7 +7,7 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (1 .. 10) {
+for my $d (1 .. 5) {
     print "nrt($d)=", nrt($d);
 }
 
@@ -54,7 +54,7 @@ sub nrt {
                     for ([0,1],[1,2],[0,2]) {
                         my ($v1, $v2) = @vec[ @$_ ];
                         if (perp($v1,$v2)) {
-                            #print "d=$d found (0,0) ($u,$v) ($x,$y)";
+                            warn "# RT d=$d ($u,$v) ($x,$y)";
                             $count += 0.5;
                             last;
                         }
