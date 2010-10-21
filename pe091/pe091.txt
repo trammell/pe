@@ -49,8 +49,8 @@ product is zero:
         (0,1).(1,0) = 0 + 0 = 0
         (1,1).(-1,1) = -1 + 1 = 0
 
-Here are some correct values, obtained from a correct but slow implementation
-of the solution:
+Here are some correct values, obtained from a correct but too-slow
+implementation of the solution:
 
     nrt(1)=3
     nrt(2)=14
@@ -102,4 +102,25 @@ of the solution:
     nrt(48)=13046
     nrt(49)=13611
     nrt(50)=14234
+
+Say that nrt(i) is the sum of individual N(i) values:
+
+   nrt(j) = sum[i=1..j]{ N(i) }
+
+Where N(i) can be broken into two smaller functions:
+
+   N(i) = p(i) + q(i)
+
+Where p(i) counts the number of triangles where all three vertices are on
+the edge of the square (of size i), so:
+
+   p(i) = 3 * (2i - 1)
+        = 6i - 3
+
+And q(i) is the number of triangles where one of the vertices is not on the
+edge of the square.  Values of q(i) are
+
+      i     q(i)
+   ----- -------
+
 
