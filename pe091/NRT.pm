@@ -8,17 +8,26 @@ my @origin = (0,0);
 my $DEBUG = 1;
 
 
-my @correct = (0,3,14,33,62,101,148);
+my @correct = (0,3,14,33,62,101,148,);
 
-for my $d (0 .. $#correct) {
-    my $nrt = nrt($d);
-    print "nrt($d)=$nrt";
-    next if $nrt == $correct[$d];
-    warn "!!! got nrt($d)=$nrt; correct value is $correct[$d]\n";
+my $nrt = 0;
+
+print "i     P       Q       N      nrt    correct\n";
+print "--  ------  ------  ------  ------  -------\n";
+
+for my $i (0 .. $#correct) {
+    my $p = P($i);
+    my $q = Q($i);
+    my $N = $p + $q;
+    $nrt += $N;
+
+    my $format = "%2d  %6d  %6d  %6d  %6d  %7s\n";
+    my $correct = ($nrt == $correct[$i]) ? 'yes' : 'no';
+    printf $format, $i, $p, $q, $N, $nrt, $correct;
 }
 
-print is_rt([1,1],[0,2]);
-print is_rt([1,1],[1,2]);
+#print is_rt([1,1],[0,2]);
+#print is_rt([1,1],[1,2]);
 
 exit;
 
@@ -44,23 +53,24 @@ sub nrt {
 
 # return the number of triangles with one point on the origin and the other
 # two points both on the "edge" (X=0, X=a, Y=0, Y=a).
-#   a=1 => 3
-#   a=2 => 9
-#   a=3 => 15
-sub nrt_edge {
-    my $a = shift;
-    return 6 * $a - 3;
+#   i=1 => 3
+#   i=2 => 9
+#   i=3 => 15
+sub P {
+    my $i = shift;
+    return 0 if $i < 1;
+    return 6 * $i - 3;
 }
 
 # Return the number of triangles witn one point on the origin, one point on
 # the "edge", and one point in the interior of the box.
-sub nrt_interior {
-    my $d = shift;
-    my @ep = edge_points($d);
+sub Q {
+    my $i = shift;
+    return 0 if $i < 1;
+    my @ep = edge_points($i);
     my $count = 0;
-
-    for my $x (1 .. $d - 1) {
-        for my $y (1 .. $d - 1) {
+    for my $x (1 .. $i - 1) {
+        for my $y (1 .. $i - 1) {
             for my $e (@ep) {
                 if (is_rt([$x,$y],$e)) {
                     $count++;
@@ -69,7 +79,6 @@ sub nrt_interior {
             }
         }
     }
-
     return $count;
 }
 
@@ -105,4 +114,3 @@ sub perp {
     my ($u,$v) = @_;
     return (abs($u->[0] * $v->[0] + $u->[1] * $v->[1]) < 1e-9) ? 1 : 0;
 }
-
