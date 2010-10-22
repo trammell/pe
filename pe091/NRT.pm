@@ -2,25 +2,30 @@
 
 use strict;
 use warnings FATAL => 'all';
+use parent 'Exporter';
 use Data::Dumper;
 
-my @origin = (0,0);
-my $DEBUG = 1;
-my @correct = (0,3,14,33,62,101,148,);
+our @EXPORT_OK = qw/ N P Q /;
+our $VERBOSE;
 
-my $T;
+unless (caller()) {
+    my @origin = (0,0);
+    my $DEBUG = 1;
+    my @correct = (0,3,14,33,62,101,148,);
+    my $T;
 
-print " i     P      Q      N      T    correct?\n";
-print "---  -----  -----  -----  -----  --------\n";
+    print " i     P      Q      N      T    correct?\n";
+    print "---  -----  -----  -----  -----  --------\n";
 
-for my $i (0 .. $#correct) {
-    my $P = P($i);
-    my $Q = Q($i);
-    my $N = $P + $Q;
-    $T += $N;
-    my $format = "%3d  %5d  %5d  %5d  %5d  %8s\n";
-    my $correct = ($T == $correct[$i]) ? 'yes' : 'no';
-    printf $format, $i, $P, $Q, $N, $T, $correct;
+    for my $i (0 .. $#correct) {
+        my $P = P($i);
+        my $Q = Q($i);
+        my $N = $P + $Q;
+        $T += $N;
+        my $format = "%3d  %5d  %5d  %5d  %5d  %8s\n";
+        my $correct = ($T == $correct[$i]) ? 'yes' : 'no';
+        printf $format, $i, $P, $Q, $N, $T, $correct;
+    }
 }
 
 =head2 P($s)
@@ -61,11 +66,11 @@ sub Q {
         next if abs($x - int($x)) > 1e-9;
         $x = int($x);
         next if $x < -0.1;
-        next if $x > $i + 0.1;
-        my $y = $i;
+        next if $x > $s + 0.1;
+        my $y = $s;
         for my $k ("($p->[0],$p->[1]),($x,$y)", "($p->[1],$p->[0]),($y,$x)")
         {
-            warn "## Q: found $k\n";
+            warn "## Q: found $k\n" if $VERBOSE;
             $found{ $k } = 1;
         }
     }
@@ -91,3 +96,5 @@ sub edge_points {
     push @edge, map [ $d, $_ ], reverse 0 .. $d - 1;
     return @edge;
 }
+
+1;
