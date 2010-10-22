@@ -6,80 +6,82 @@ use Data::Dumper;
 
 my @origin = (0,0);
 my $DEBUG = 1;
-
-
 my @correct = (0,3,14,33,62,101,148,);
 
-my $nrt = 0;
+my $T;
 
-print "i     P       Q       N      nrt    correct\n";
-print "--  ------  ------  ------  ------  -------\n";
+print " i     P      Q      N      T    correct?\n";
+print "---  -----  -----  -----  -----  --------\n";
 
 for my $i (0 .. $#correct) {
-    my $p = P($i);
-    my $q = Q($i);
-    my $N = $p + $q;
-    $nrt += $N;
-
-    my $format = "%2d  %6d  %6d  %6d  %6d  %7s\n";
-    my $correct = ($nrt == $correct[$i]) ? 'yes' : 'no';
-    printf $format, $i, $p, $q, $N, $nrt, $correct;
+    my $P = P($i);
+    my $Q = Q($i);
+    my $N = $P + $Q;
+    $T += $N;
+    my $format = "%3d  %5d  %5d  %5d  %5d  %8s\n";
+    my $correct = ($T == $correct[$i]) ? 'yes' : 'no';
+    printf $format, $i, $P, $Q, $N, $T, $correct;
 }
 
-#print is_rt([1,1],[0,2]);
-#print is_rt([1,1],[1,2]);
+=head2 P($s)
 
-exit;
+Return the number of triangles with one point on the origin and the other two
+points both on the "edge" (i.e. X=0, X=a, Y=0, or Y=a).  Argument C<$s> is the
+length of one side of the square.
 
-=head2 nrt($d)
+    P(1) = 3
+    P(2) = 9
+    P(3) = 15
 
-Returns the number of triangles OPQ in the first quadrant.
+In general:
+
+    P(s) = 3 * (2s - 1) = 6 * s - 3
 
 =cut
 
-my $NRT;
-sub nrt {
-    my $d = shift;
-    $NRT ||= [0,3];
-    unless (defined $NRT->[$d]) {
-        my $p = $NRT->[$d - 1];
-        my $e = nrt_edge($d);
-        my $i = nrt_interior($d);
-        warn "# p($d)=$p e($d)=$e i($d)=$i\n";
-        $NRT->[$d] = $p + $e + $i;
-    }
-    return $NRT->[$d];
-}
-
-# return the number of triangles with one point on the origin and the other
-# two points both on the "edge" (X=0, X=a, Y=0, Y=a).
-#   i=1 => 3
-#   i=2 => 9
-#   i=3 => 15
 sub P {
-    my $i = shift;
-    return 0 if $i < 1;
-    return 6 * $i - 3;
+    my $s = shift;
+    return ($s < 1) ? 0 : 6 * $s - 3;
 }
 
-# Return the number of triangles witn one point on the origin, one point on
-# the "edge", and one point in the interior of the box.
+=head2 Q($s)
+
+Return the number of triangles with one point on the origin, one point in the
+interior, and one point on the outer edge of the box (one of the lines "x=s",
+"y=s").  Argument C<$s> is the length of one side of the square.
+
+=cut
+
 sub Q {
-    my $i = shift;
-    return 0 if $i < 1;
-    my @ep = edge_points($i);
-    my $count = 0;
-    for my $x (1 .. $i - 1) {
-        for my $y (1 .. $i - 1) {
-            for my $e (@ep) {
-                if (is_rt([$x,$y],$e)) {
-                    $count++;
-                    warn "# RT ($x,$y),($e->[0],$e->[1])\n";
-                }
-            }
+    my $s = shift;
+    return 0 if $s < 1;
+    my %found;
+    for my $p (interior_points($s)) {
+        my $x = $p->[0] - ($p->[1] / $p->[0]) * ($s - $p->[1]);
+        next if abs($x - int($x)) > 1e-9;
+        $x = int($x);
+        next if $x < -0.1;
+        next if $x > $i + 0.1;
+        my $y = $i;
+        for my $k ("($p->[0],$p->[1]),($x,$y)", "($p->[1],$p->[0]),($y,$x)")
+        {
+            warn "## Q: found $k\n";
+            $found{ $k } = 1;
         }
     }
-    return $count;
+    return scalar(keys %found);
+}
+
+# list all points on the interior of the box (i.e. the lines X=d, Y=d)
+sub interior_points {
+    my $i = shift;
+    my @points;
+    for my $j (1 .. $i) {
+        for my $k (1 .. $i - 1) {
+            push @points, [$j,$k]
+        }
+    }
+    return @points;
 }
 
 # list all points on the outer edge of the box (i.e. the lines X=d, Y=d)
@@ -88,29 +90,4 @@ sub edge_points {
     my @edge = map [ $_, $d ], 0 .. $d;
     push @edge, map [ $d, $_ ], reverse 0 .. $d - 1;
     return @edge;
-}
-
-# return true if the points, together with the origin, represent a right
-# triangle
-sub is_rt {
-    my @p = @{ $_[0] };
-    my @q = @{ $_[1] };
-
-    # is OP perpendicular to PQ?
-    my $t1 = $p[0] * ($p[0] - $q[0]) + $p[1] * ($p[1] - $q[1]);
-    #print "t1=$t1";
-    return 1 if abs($t1) < 1e-9;
-
-    # is OQ perpendicular to PQ?
-    my $t2 = $q[0] * ($p[0] - $q[0]) + $q[1] * ($p[1] - $q[1]);
-    #print "t2=$t2";
-    return 1 if abs($t2) < 1e-9;
-
-    return 0;
-}
-
-# returns true if vectors (u,v) are perpendicular
-sub perp {
-    my ($u,$v) = @_;
-    return (abs($u->[0] * $v->[0] + $u->[1] * $v->[1]) < 1e-9) ? 1 : 0;
 }
