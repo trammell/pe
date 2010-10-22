@@ -7,7 +7,7 @@ use Data::Dumper;
 my @origin = (0,0);
 my $DEBUG = 1;
 
-for my $d (1 .. 5) {
+for my $d (1 .. 6) {
     print "nrt($d)=", nrt($d);
 }
 
