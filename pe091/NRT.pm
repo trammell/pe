@@ -4,7 +4,6 @@ use strict;
 use warnings FATAL => 'all';
 use parent 'Exporter';
 use Data::Dumper;
-
 our @EXPORT_OK = qw/ N P Q /;
 our $VERBOSE;
 
