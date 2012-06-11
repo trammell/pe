@@ -61,6 +61,24 @@ sub Q {
     return 0 if $s < 1;
     my %found;
     for my $p (interior_points($s)) {
+        my ($x1, $y1) = @$p;
+        my $gcd = gcd($x1,$y1);
+        my ($x0, $y0) = ($x1 / $gcd, $y1 / $gcd);
+
+        # positive direction
+        my ($x, $y) = ($x1, $y1);
+        while (1) {
+            my $x -= $y0;
+            my $y -= $x0;
+
+
+
+        }
+
+
+
+
+
         my $x = $p->[0] - ($p->[1] / $p->[0]) * ($s - $p->[1]);
         next if abs($x - int($x)) > 1e-9;
         $x = int($x);
@@ -94,6 +112,11 @@ sub edge_points {
     my @edge = map [ $_, $d ], 0 .. $d;
     push @edge, map [ $d, $_ ], reverse 0 .. $d - 1;
     return @edge;
+}
+
+sub gcd {
+    my ($a,$b) = @_;
+    return $b ? gcd($b, $a % $b) : $a;
 }
 
 1;

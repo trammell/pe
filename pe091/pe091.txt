@@ -103,22 +103,26 @@ implementation of the solution:
     T(49)=13611
     T(50)=14234
 
-Say that T(i) is the sum of individual N(i) values:
+It seems pretty obvious to me (but is it correct?) that we want to break
+this problem down into a set of smaller problems, i.e. start with T(1),
+T(2), ... and work our way up to T(50).  Say that T(i) is the sum of
+individual N(i) values:
 
    T(j) = sum[i=1..j]{ N(i) }
 
-Where N(i) can be broken into two smaller functions:
+Where N(i) is the number of right triangles that can fit into a square of
+size "i".   N() can be broken into two smaller functions:
 
    N(i) = P(i) + Q(i)
 
-Where P(i) counts the number of triangles where all three vertices are on
-the edge of the square (of size i), so:
+Where P(i) (the easy part) counts the number of triangles where all three
+vertices are on the edge of the square (of size i), so:
 
    P(i) = 3 * (2i - 1)
         = 6i - 3
 
-And Q(i) is the number of triangles where one of the vertices is not on the
-edge of the square.  Some values of Q(i) are:
+And Q(i) (the hard part) is the number of triangles where one of the
+vertices is not on the edge of the square.  Some values of Q(i) are:
 
     i   Q(i)
    --   ----
@@ -133,3 +137,9 @@ edge of the square.  Some values of Q(i) are:
     8     24
     9
    10
+
+This is hard for a few reasons:
+
+   * the right angle can be on a point on the interior *or* a point on the
+     edge
+
