@@ -5,10 +5,18 @@ use strict;
 use warnings;
 
 
+$c = 1;
 $f = 0.5;
 
 for (1 .. 1000) {
 
+    if (rand() < 0.5) {
+
+
+    } else {
+
+
+    }
 
 
 }
